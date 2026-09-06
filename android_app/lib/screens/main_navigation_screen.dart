@@ -219,152 +219,188 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isCompact = screenWidth < 360;
+
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 74, // Extended downwards by several pixels for spacious, premium touch target
         backgroundColor: StudioTheme.surfaceDark,
         elevation: 0,
-        titleSpacing: 16,
-        title: Row(
-          children: [
-            // App Branding & Pulsing Live Indicator
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: StudioTheme.accentSky.withOpacity(0.15),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.bolt, color: StudioTheme.accentSky, size: 20),
-            ),
-            const SizedBox(width: 8),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'HIGHRISE STUDIO',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
-                    color: Colors.white,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.circle, color: StudioTheme.accentEmerald, size: 8),
-                    SizedBox(width: 4),
-                    Text(
-                      'FLEET CONNECTED',
-                      style: TextStyle(
-                        fontSize: 9,
-                        color: StudioTheme.accentEmerald,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const Spacer(),
-
-            // Multi-Room Switcher Dropdown
-            PopupMenuButton<RoomInfo>(
-              color: StudioTheme.surfaceDark,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: StudioTheme.borderDark),
-              ),
-              onSelected: _onRoomSelected,
-              itemBuilder: (context) {
-                final items = _rooms.map((room) {
-                  final isSelected = room.id == _activeRoomId;
-                  return PopupMenuItem<RoomInfo>(
-                    value: room,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.meeting_room,
-                          size: 16,
-                          color: isSelected ? StudioTheme.accentSky : StudioTheme.textMuted,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            room.name,
-                            style: TextStyle(
-                              color: isSelected ? StudioTheme.accentSky : Colors.white,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                              fontSize: 13,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (isSelected)
-                          const Icon(Icons.check, color: StudioTheme.accentSky, size: 16),
-                      ],
-                    ),
-                  );
-                }).toList();
-
-                return [
-                  ...items,
-                  const PopupMenuDivider(),
-                  PopupMenuItem<RoomInfo>(
-                    onTap: () => Future.delayed(Duration.zero, _showAddRoomDialog),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.add, color: StudioTheme.accentSky, size: 18),
-                        SizedBox(width: 8),
-                        Text(
-                          'Add New Room...',
-                          style: TextStyle(color: StudioTheme.accentSky, fontWeight: FontWeight.bold, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-                ];
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        titleSpacing: 14,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            height: 1,
+            color: StudioTheme.borderDark.withOpacity(0.6),
+          ),
+        ),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            children: [
+              // App Branding & Pulsing Live Indicator
+              Container(
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: StudioTheme.cardDark,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: StudioTheme.borderDark),
+                  color: StudioTheme.accentSky.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: StudioTheme.accentSky.withOpacity(0.3), width: 1.5),
                 ),
-                child: Row(
+                child: const Icon(Icons.bolt, color: StudioTheme.accentSky, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.meeting_room, color: StudioTheme.accentSky, size: 14),
-                    const SizedBox(width: 6),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 110),
-                      child: Text(
-                        _activeRoomName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      'HIGHRISE STUDIO',
+                      style: TextStyle(
+                        fontSize: isCompact ? 13 : 15,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.2,
+                        color: Colors.white,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.arrow_drop_down, color: StudioTheme.textMuted, size: 18),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: StudioTheme.accentEmerald,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: StudioTheme.accentEmerald.withOpacity(0.6),
+                                blurRadius: 4,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          'FLEET CONNECTED',
+                          style: TextStyle(
+                            fontSize: isCompact ? 8.5 : 10,
+                            color: StudioTheme.accentEmerald,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.9,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
-            ),
 
-            const SizedBox(width: 4),
+              const SizedBox(width: 8),
 
-            // Disconnect Server button
-            IconButton(
-              icon: const Icon(Icons.power_settings_new, color: StudioTheme.textMuted, size: 20),
-              tooltip: 'Disconnect / Switch Server',
-              onPressed: _confirmLogout,
-            ),
-          ],
+              // Multi-Room Switcher Dropdown (Responsive width constraint)
+              PopupMenuButton<RoomInfo>(
+                color: StudioTheme.surfaceDark,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: const BorderSide(color: StudioTheme.borderDark),
+                ),
+                onSelected: _onRoomSelected,
+                itemBuilder: (context) {
+                  final items = _rooms.map((room) {
+                    final isSelected = room.id == _activeRoomId;
+                    return PopupMenuItem<RoomInfo>(
+                      value: room,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.meeting_room,
+                            size: 16,
+                            color: isSelected ? StudioTheme.accentSky : StudioTheme.textMuted,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              room.name,
+                              style: TextStyle(
+                                color: isSelected ? StudioTheme.accentSky : Colors.white,
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                fontSize: 13,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (isSelected)
+                            const Icon(Icons.check, color: StudioTheme.accentSky, size: 16),
+                        ],
+                      ),
+                    );
+                  }).toList();
+
+                  return [
+                    ...items,
+                    const PopupMenuDivider(),
+                    PopupMenuItem<RoomInfo>(
+                      onTap: () => Future.delayed(Duration.zero, _showAddRoomDialog),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.add, color: StudioTheme.accentSky, size: 18),
+                          SizedBox(width: 8),
+                          Text(
+                            'Add New Room...',
+                            style: TextStyle(color: StudioTheme.accentSky, fontWeight: FontWeight.bold, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ];
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: StudioTheme.cardDark,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: StudioTheme.borderDark),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.meeting_room, color: StudioTheme.accentSky, size: 14),
+                      const SizedBox(width: 6),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: (screenWidth * 0.28).clamp(80.0, 150.0),
+                        ),
+                        child: Text(
+                          _activeRoomName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.arrow_drop_down, color: StudioTheme.textMuted, size: 18),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 2),
+
+              // Disconnect Server button
+              IconButton(
+                icon: const Icon(Icons.power_settings_new, color: StudioTheme.textMuted, size: 20),
+                tooltip: 'Disconnect / Switch Server',
+                onPressed: _confirmLogout,
+              ),
+            ],
+          ),
         ),
       ),
 
