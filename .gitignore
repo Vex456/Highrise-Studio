@@ -1,0 +1,15 @@
+# Scratch & Cache
+scratch/
+__pycache__/
+*.pyc
+
+# Local AI agents metadata & graphify
+.agents/
+graphify-out/
+
+# Flutter / Android build outputs
+android_app/build/
+android_app/.dart_tool/
+android_app/.flutter-plugins
+android_app/.flutter-plugins-dependencies
+android_app/.packages

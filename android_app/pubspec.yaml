@@ -1,0 +1,25 @@
+name: highrise_studio
+description: "Professional ecosystem and 3D room manager for Highrise Multi-Bot fleet."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  shared_preferences: ^2.2.3
+  just_audio: ^0.9.36
+  audio_service: ^0.18.12
+  flutter_local_notifications: ^17.1.2
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
