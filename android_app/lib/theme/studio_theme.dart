@@ -24,6 +24,14 @@ class StudioTheme {
   static const Color bot5 = Color(0xFFF43F5E); // Bot 5: Games (Rose)
   static const Color bot6 = Color(0xFF10B981); // Bot 6: Chaty (Emerald)
 
+  // Extended Convenience Aliases
+  static const Color cardDark = card;
+  static const Color borderDark = cardBorder;
+  static const Color surfaceDark = surface;
+  static const Color accentSky = accent;
+  static const Color accentPink = bot5;
+  static const Color accentPurple = bot4;
+
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
