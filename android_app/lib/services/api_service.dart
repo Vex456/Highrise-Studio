@@ -262,6 +262,35 @@ class ApiService {
     return res.statusCode == 200;
   }
 
+  // Append and persist a new room directly into server config.yaml
+  Future<bool> addRoomToConfig(String roomId, String roomName, [List<int>? activeBots]) async {
+    try {
+      final bots = activeBots ?? [1, 2, 3, 4, 5, 6];
+      String currentYaml = '';
+      try {
+        currentYaml = await getRawConfig();
+      } catch (_) {}
+
+      final newRoomYamlBlock = '''
+  - id: "$roomId"
+    name: "$roomName"
+    enabled: true
+    active_bots: [${bots.join(', ')}]
+''';
+
+      String updatedYaml;
+      if (currentYaml.contains('rooms:')) {
+        updatedYaml = currentYaml.replaceFirst('rooms:', 'rooms:$newRoomYamlBlock');
+      } else {
+        updatedYaml = '$currentYaml\nrooms:$newRoomYamlBlock';
+      }
+
+      return await saveRawConfig(updatedYaml);
+    } catch (_) {
+      return false;
+    }
+  }
+
   // Restart System
   Future<bool> restartSystem({bool hard = false}) async {
     final res = await _client.post(

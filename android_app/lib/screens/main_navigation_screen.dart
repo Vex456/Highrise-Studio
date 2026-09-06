@@ -152,7 +152,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               backgroundColor: StudioTheme.accentSky,
               foregroundColor: StudioTheme.bgDark,
             ),
-            onPressed: () {
+            onPressed: () async {
               final id = idController.text.trim();
               final name = nameController.text.trim().isEmpty ? 'Custom Room' : nameController.text.trim();
               if (id.isNotEmpty) {
@@ -164,6 +164,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   _activeRoomName = name;
                 });
                 widget.storage.setActiveRoomId(id);
+
+                // Write new room to server config.yaml!
+                final ok = await widget.api.addRoomToConfig(id, name);
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(ok ? 'Room "$name" added and saved to config.yaml!' : 'Room "$name" activated locally'),
+                      backgroundColor: ok ? StudioTheme.accentEmerald : StudioTheme.accentYellow,
+                    ),
+                  );
+                }
               }
             },
             child: const Text('Add & Switch', style: TextStyle(fontWeight: FontWeight.bold)),

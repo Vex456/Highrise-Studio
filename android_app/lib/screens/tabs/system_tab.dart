@@ -394,7 +394,7 @@ class _SystemTabState extends State<SystemTab> with SingleTickerProviderStateMix
                 backgroundColor: StudioTheme.accentSky,
                 foregroundColor: StudioTheme.bgDark,
               ),
-              onPressed: () {
+              onPressed: () async {
                 final id = idCtrl.text.trim();
                 final name = nameCtrl.text.trim().isEmpty ? 'Custom Room' : nameCtrl.text.trim();
                 if (id.isNotEmpty) {
@@ -407,6 +407,7 @@ class _SystemTabState extends State<SystemTab> with SingleTickerProviderStateMix
                     ));
                   });
                   Navigator.pop(ctx);
+                  await _saveConfig();
                 }
               },
               child: const Text('Add Room', style: TextStyle(fontWeight: FontWeight.bold)),

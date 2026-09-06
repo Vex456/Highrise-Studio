@@ -38,6 +38,8 @@ jobs:
 
       - name: Build Android Release APK
         working-directory: ./android_app
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+UseG1GC"
         run: flutter build apk --release --no-tree-shake-icons --android-skip-build-dependency-validation
 
       - name: Upload Release APK Artifact
