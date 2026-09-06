@@ -22,6 +22,9 @@ class ApiService {
     while (u.endsWith('/')) {
       u = u.substring(0, u.length - 1);
     }
+    if (!u.endsWith('/api')) {
+      u = '$u/api';
+    }
     return u;
   }
 
@@ -73,8 +76,11 @@ class ApiService {
       await _storage.setServerUrl(norm);
       await _storage.setAdminPassword(targetPassword);
       return true;
+    } else if (res.statusCode == 401) {
+      throw Exception('Invalid admin password');
+    } else {
+      throw Exception('Server returned ${res.statusCode}');
     }
-    return false;
   }
 
   // System Status
