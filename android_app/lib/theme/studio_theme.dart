@@ -28,9 +28,13 @@ class StudioTheme {
   static const Color cardDark = card;
   static const Color borderDark = cardBorder;
   static const Color surfaceDark = surface;
+  static const Color bgDark = background;
   static const Color accentSky = accent;
   static const Color accentPink = bot5;
   static const Color accentPurple = bot4;
+  static const Color accentYellow = warning;
+  static const Color accentEmerald = bot6;
+  static const Color accentRed = offline;
 
   static ThemeData get darkTheme {
     return ThemeData(
